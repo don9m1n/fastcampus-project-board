@@ -8,11 +8,11 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Getter
-@ToString
+@ToString(exclude = "articleComments") // 무한 참조 방지
 @Table(indexes = {
         @Index(columnList = "title"),
         @Index(columnList = "hashtag"),
@@ -36,6 +36,11 @@ public class Article {
 
     @Setter
     private String hashtag; // 해시태그
+
+    // List, Set, Map 전부 가능
+    @OrderBy("id")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private Set<ArticleComment> articleComments = new LinkedHashSet<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false) // 생성일자는 변경되면 안됨
