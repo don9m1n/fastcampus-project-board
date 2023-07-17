@@ -5,10 +5,7 @@
     <title>게시판 페이지</title>
 </head>
 <body>
-    <header>
-        헤더 삽입부
-        <hr>
-    </header>
+    <header th:replace="layout/header::header"></header>
 
     <main>
         <form th:action="@{/articles/search}" method="post">
@@ -65,9 +62,6 @@
         </nav>
     </main>
 
-    <footer>
-        <hr>
-        푸터 삽입부
-    </footer>
+    <footer th:replace="layout/footer::footer"></footer>
 </body>
 </html>
