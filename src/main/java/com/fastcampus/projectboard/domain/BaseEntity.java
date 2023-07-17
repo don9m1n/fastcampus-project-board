@@ -1,6 +1,8 @@
 package com.fastcampus.projectboard.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedBy;
@@ -16,7 +18,7 @@ import java.time.LocalDateTime;
 @ToString
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseEntity {
+public abstract class BaseEntity {
 
     // 날짜 파싱
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
