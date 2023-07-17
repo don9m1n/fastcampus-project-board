@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판 페이지</title>
+</head>
+<body>
+    <header>
+        헤더 삽입부
+        <hr>
+    </header>
+
+    <main>
+        <form th:action="@{/articles/search}" method="post">
+            <label for="searchType"></label>
+            <select id="searchType" name="searchType">
+                <option value="title" selected>제목</option>
+                <option value="content">본문</option>
+                <option value="content">아이디</option>
+                <option value="content">닉네임</option>
+                <option value="hashtag">해시태그</option>
+            </select>
+
+            <label for="keyword"></label>
+            <input type="search" id="keyword" name="keyword" placeholder="검색어를 입력해주세요">
+            <button type="submit">검색</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>해시태그</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>첫 글</td>
+                    <td>#java</td>
+                    <td>동민</td>
+                    <td>2023-07-17</td>
+                </tr>
+                <tr>
+                    <td>두번째 글</td>
+                    <td>#react</td>
+                    <td>동민</td>
+                    <td>2023-07-19</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <nav>
+            <table>
+                <tr>
+                    <td>prev</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>next</td>
+                </tr>
+            </table>
+        </nav>
+    </main>
+
+    <footer>
+        <hr>
+        푸터 삽입부
+    </footer>
+</body>
+</html>
