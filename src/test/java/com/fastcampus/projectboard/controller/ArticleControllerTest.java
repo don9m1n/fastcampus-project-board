@@ -1,10 +1,12 @@
 package com.fastcampus.projectboard.controller;
 
+import com.fastcampus.projectboard.config.SecurityConfig;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -12,6 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("View 컨트롤러 - 게시판")
+@Import(SecurityConfig.class) // 추가로 필요한 빈을 추가
 @WebMvcTest(ArticleController.class)
 // @WebMvcTest는 기본적으로 모든 컨트롤러를 읽어들임. 테스트에 필요한 컨트롤러만 설정하는 것이 효율적이다. (좀 더 가볍게 테스트 가능)
 class ArticleControllerTest {
