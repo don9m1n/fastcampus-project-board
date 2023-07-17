@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @ToString
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseEntity {
+public abstract class BaseEntity {
 
     // 날짜 파싱
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
