@@ -1,27 +1,43 @@
 package com.fastcampus.projectboard.controller;
 
+import com.fastcampus.projectboard.domain.type.SearchType;
+import com.fastcampus.projectboard.dto.response.ArticleResponse;
+import com.fastcampus.projectboard.dto.response.ArticleWithCommentsResponse;
+import com.fastcampus.projectboard.service.ArticleService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("/articles")
 @Controller
+@RequiredArgsConstructor
 public class ArticleController {
 
+    private final ArticleService articleService;
+
     @GetMapping
-    public String articles(Model model) {
-        model.addAttribute("articles", List.of());
+    public String articles(
+            @RequestParam(required = false) SearchType searchType,
+            @RequestParam(required = false) String searchValue,
+            @PageableDefault(size = 10, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model) {
+
+        model.addAttribute("articles", articleService.searchArticles(searchType, searchValue, pageable).map(ArticleResponse::from));
         return "articles/index";
     }
 
-    @GetMapping("/{id}")
-    public String article(@PathVariable Long id, Model model) {
-        model.addAttribute("article", "article"); // todo: null을 넣으면 테스트시 오류 발생..
-        model.addAttribute("articleComments", List.of());
+    @GetMapping("/{articleId}")
+    public String article(@PathVariable Long articleId, Model model) {
+        ArticleWithCommentsResponse article = ArticleWithCommentsResponse.from(articleService.getArticle(articleId));
+        model.addAttribute("article", article);
+        model.addAttribute("articleComments", article.articleCommentsResponse());
         return "articles/detail";
     }
 
