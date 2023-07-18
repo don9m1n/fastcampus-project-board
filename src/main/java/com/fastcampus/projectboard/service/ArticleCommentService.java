@@ -20,7 +20,7 @@ public class ArticleCommentService {
 
 
     @Transactional(readOnly = true)
-    public List<ArticleCommentDto> searchArticleComment(Long articleId) {
+    public List<ArticleCommentDto> searchArticleComments(Long articleId) {
         return List.of();
 //        Article article = articleRepository.findById(articleId).orElseThrow();
 //        return article.getArticleComments()
@@ -35,5 +35,11 @@ public class ArticleCommentService {
     }
 
     public void saveArticleComment(ArticleCommentDto dto) {
+    }
+
+    public void updateArticleComment(ArticleCommentDto dto) {
+    }
+
+    public void deleteArticleComment(Long articleCommentId) {
     }
 }
