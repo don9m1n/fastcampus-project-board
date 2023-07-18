@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        <table class="table">
+        <table class="table" id="article-table">
             <thead>
                 <tr>
                     <th class="col-6">제목</th>
@@ -55,17 +55,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>첫 글</td>
-                    <td>#java</td>
-                    <td>동민</td>
-                    <td>2023-07-17</td>
-                </tr>
-                <tr>
-                    <td>두번째 글</td>
-                    <td>#react</td>
-                    <td>동민</td>
-                    <td>2023-07-19</td>
+                <tr th:each="article : ${articles}">
+                    <td>
+                        <a th:href="@{|/articles/${article.id}|}" th:text="${article.title}"></a>
+                    </td>
+                    <td th:text="${article.hashtag}"></td>
+                    <td th:text="${article.nickname}"></td>
+                    <td th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}"></td>
                 </tr>
             </tbody>
         </table>
