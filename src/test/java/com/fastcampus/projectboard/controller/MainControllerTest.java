@@ -26,9 +26,7 @@ class MainControllerTest {
         // When & Then
         mvc.perform(get("/"))
                 .andExpect(status().is3xxRedirection()) // 302
-                .andExpect(redirectedUrl("/articles"))
-                .andExpect(view().name("redirect:/articles"))
-                .andExpect(header().stringValues("Location", "/articles"))
-                .andDo(print());
+                .andExpect(forwardedUrl("/articles"))
+                .andExpect(view().name("forward:/articles"));
     }
 }
