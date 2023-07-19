@@ -1,0 +1,9 @@
+#article-table > thead a {
+    text-decoration: none;
+    color: black;
+}
+
+#article-table > thead a:hover {
+    color: darkred;
+    font-weight: bold;
+}
