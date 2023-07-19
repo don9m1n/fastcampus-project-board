@@ -66,20 +66,16 @@
             </tbody>
         </table>
 
-        <nav aria-label="Page navigation example">
+        <nav id="pagination" aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
+                    <a class="page-link" th:classappend="${articles.number <= 0} ? 'disabled' : ''"  th:href="@{|/articles?page=${articles.number - 1}|}" th:text="Previous"></a>
                 </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li th:each="page : ${paginationBarNumbers}">
+                    <a class="page-link" th:classappend="${articles.number == page} ? 'active' : ''" th:href="@{|/articles?page=${page}|}" th:text="${page + 1}"></a>
+                </li>
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
+                    <a class="page-link" th:classappend="${articles.number >= articles.totalPages - 1} ? 'disabled' : ''" th:href="@{|/articles?page=${articles.number + 1}|}" th:text="Next"></a>
                 </li>
             </ul>
         </nav>
