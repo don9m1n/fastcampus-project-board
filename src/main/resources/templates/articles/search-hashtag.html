@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/table-header.css}">
+    <script defer th:src="@{js/bootstrap.min.js}"></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <header th:replace="layout/header::header"></header>
+
+  <main class="container flex-grow-1">
+      <header class="py-5 text-center">
+          <h1>Hashtags</h1>
+      </header>
+
+      <section class="row">
+          <div id="hashtags" class="col-9 d-flex flex-wrap justify-content-evenly">
+              <div class="p-2" th:each="hashtag : ${hashtags}">
+                  <h2 class="text-center lh-lg font-monospace">
+                      <a class="text-reset" th:text="${hashtag}"
+                         th:href="@{/articles/search-hashtag(
+                         page=${param.page},
+                         sort=${param.sort},
+                         searchType=${searchType.name},
+                         searchValue=${hashtag}
+                         )}"
+                      ></a>
+                  </h2>
+              </div>
+          </div>
+      </section>
+
+      <table class="table" id="article-table">
+          <thead>
+          <tr>
+              <th class="col-5">
+                  <a th:href="@{/articles/search-hashtag(searchType=${searchType.name},
+                                                searchValue=${param.searchValue},
+                                                page=${articles.number},
+                                                sort='title' + (*{articles.sort.getOrderFor('title')} != null ? (*{articles.sort.getOrderFor('title').direction.name} != 'DESC' ? ',desc' : '') : ''))}" th:text="제목">
+                  </a>
+              </th>
+              <th class="col-2">
+                  <a th:href="@{/articles/search-hashtag(searchType=${searchType.name},
+                                                searchValue=${param.searchValue},
+                                                page=${articles.number},
+                                                sort='hashtag' + (*{articles.sort.getOrderFor('hashtag')} != null ? (*{articles.sort.getOrderFor('hashtag').direction.name} != 'DESC' ? ',desc' : '') : ''))}" th:text="본문">
+                  </a>
+              </th>
+              <th class="col">
+                  <a th:href="@{/articles/search-hashtag(searchType=${searchType.name},
+                                                searchValue=${param.searchValue},
+                                                page=${articles.number},
+                                                sort='userAccount.userId' + (*{articles.sort.getOrderFor('userAccount.userId')} != null ? (*{articles.sort.getOrderFor('userAccount.userId').direction.name} != 'DESC' ? ',desc' : '') : ''))}" th:text="작성자">
+                  </a>
+              </th>
+              <th class="col">
+                  <a th:href="@{/articles/search-hashtag(searchType=${searchType.name},
+                                                searchValue=${param.searchValue},
+                                                page=${articles.number},
+                                                sort='createdAt' + (*{articles.sort.getOrderFor('createdAt')} != null ? (*{articles.sort.getOrderFor('createdAt').direction.name} != 'DESC' ? ',desc' : '') : ''))}" th:text="작성일">
+                  </a>
+              </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="article : ${articles}">
+              <td>
+                  <a th:href="@{|/articles/${article.id}|}" th:text="${article.title}"></a>
+              </td>
+              <td>
+                  <span class="d-inline-block text-truncate" style="max-width: 300px;" th:text="${article.content}"></span>
+              </td>
+              <td th:text="${article.nickname}"></td>
+              <td th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}"></td>
+          </tr>
+          </tbody>
+      </table>
+
+      <nav id="pagination" aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+              <li class="page-item">
+                  <a class="page-link" th:classappend="${articles.number <= 0} ? 'disabled' : ''"  th:href="@{/articles(page=${articles.number - 1},searchType=${searchType.name},searchValue=${param.searchValue})}" th:text="Previous"></a>
+              </li>
+              <li th:each="page : ${paginationBarNumbers}">
+                  <a class="page-link" th:classappend="${articles.number == page} ? 'active' : ''" th:href="@{/articles(page=${page},searchType=${searchType.name},searchValue=${param.searchValue})}" th:text="${page + 1}"></a>
+              </li>
+              <li class="page-item">
+                  <a class="page-link" th:classappend="${articles.number >= articles.totalPages - 1} ? 'disabled' : ''" th:href="@{/articles(page=${articles.number + 1},searchType=${searchType.name},searchValue=${param.searchValue})}" th:text="Next"></a>
+              </li>
+          </ul>
+      </nav>
+
+
+  </main>
+
+  <footer th:replace="layout/footer::footer"></footer>
+</body>
+</html>

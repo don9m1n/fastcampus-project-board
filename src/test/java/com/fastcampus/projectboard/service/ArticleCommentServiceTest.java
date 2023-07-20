@@ -38,7 +38,6 @@ class ArticleCommentServiceTest {
     @Mock
     private ArticleRepository articleRepository;
 
-    // todo: CRUD Test!
     @DisplayName("게시글 아이디로 조회하면, 해당 게시글 댓글 리스트를 반환한다.")
     @Test
     void givenArticleId_whenSearchingComments_thenReturnsComments() {
@@ -51,8 +50,10 @@ class ArticleCommentServiceTest {
         List<ArticleCommentDto> articleComments = sut.searchArticleComments(articleId);
 
         // Then
-        assertThat(articleComments).isNotNull();
-        then(articleRepository).should().findById(articleId);
+        assertThat(articleComments)
+                .hasSize(1)
+                .first().hasFieldOrPropertyWithValue("content", expected.getContent());
+        then(articleCommentRepository).should().findByArticle_Id(articleId);
     }
 
     @DisplayName("댓글 정보를 입력하면, 댓글을 저장한다.")
