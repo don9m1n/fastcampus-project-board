@@ -36,6 +36,7 @@ class ArticleServiceTest {
     @Mock // 가짜 객체를 만듦 -> 스프링 빈에 등록되지 않음 -> @MockBean 보다 빠름
     private ArticleRepository articleRepository;
 
+
     @DisplayName("검색어 없이 게시글을 검색하면, 게시글 페이지를 반환한다.")
     @Test
     void givenNoSearchParameters_whenSearchingArticles_thenReturnsArticlePage() {
