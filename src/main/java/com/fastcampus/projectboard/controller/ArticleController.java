@@ -1,6 +1,7 @@
 package com.fastcampus.projectboard.controller;
 
 import com.fastcampus.projectboard.domain.type.SearchType;
+import com.fastcampus.projectboard.dto.ArticleDto;
 import com.fastcampus.projectboard.dto.response.ArticleResponse;
 import com.fastcampus.projectboard.dto.response.ArticleWithCommentsResponse;
 import com.fastcampus.projectboard.service.ArticleService;
@@ -49,6 +50,25 @@ public class ArticleController {
         model.addAttribute("article", article);
         model.addAttribute("articleComments", article.articleCommentsResponse());
         return "articles/detail";
+    }
+
+    @GetMapping("/search-hashtag")
+    public String searchHashtag(
+            @RequestParam(required = false) String searchValue,
+            @PageableDefault(size = 10, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model
+    ) {
+
+        Page<ArticleResponse> articles = articleService.searchArticlesByHashtag(searchValue, pageable).map(ArticleResponse::from);
+        List<String> hashtags = articleService.getHashtags();
+        List<Integer> paginationBarNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(), articles.getTotalPages());
+
+        model.addAttribute("articles", articles);
+        model.addAttribute("hashtags", hashtags);
+        model.addAttribute("paginationBarNumbers", paginationBarNumbers);
+        model.addAttribute("searchType", SearchType.HASHTAG);
+
+        return "articles/search-hashtag";
     }
 
 }
