@@ -40,10 +40,11 @@
 
         <div class="row g-5">
             <section>
-                <form class="row g-3">
+                <form class="row g-3" th:action="@{/comments/new}" method="post">
+                    <input type="hidden" name="articleId" th:value="${article.id}">
                     <div class="col-md-9 col-lg-8">
                         <label for="comment-textbox" hidden>댓글</label>
-                        <textarea class="form-control" id="comment-textbox" placeholder="댓글 쓰기.." rows="3"></textarea>
+                        <textarea class="form-control" id="comment-textbox" name="content" rows="3"></textarea>
                     </div>
                     <div class="col-md-3 col-lg-4">
                         <label for="comment-submit" hidden>댓글 쓰기</label>
@@ -53,11 +54,17 @@
 
                 <ul id="article-comments" class="row col-md-10 col-lg-8 pt-3">
                     <li th:each="comment : ${articleComments}">
-                        <div class="row">
-                            <time><small th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></small></time>
-                            <strong th:text="${comment.nickname}"></strong>
-                            <p th:text="${comment.content}"></p>
-                        </div>
+                        <form th:action="@{|/comments/${comment.id}/delete|}" method="post">
+                            <input type="hidden" name="articleId" th:value="${article.id}">
+                            <div class="row">
+                                <time><small th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></small></time>
+                                <strong th:text="${comment.nickname}"></strong>
+                                <p th:text="${comment.content}"></p>
+                            </div>
+                            <div class="col-2 mb-3">
+                                <button type="submit" class="btn btn-outline-danger">삭제</button>
+                            </div>
+                        </form>
                     </li>
                 </ul>
             </section>
