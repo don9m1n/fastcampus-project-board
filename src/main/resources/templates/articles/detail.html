@@ -30,7 +30,8 @@
         </div>
 
         <div class="row g-5" id="article-buttons">
-            <form id="delete-article-form" th:action="@{|/articles/*{id}/delete|}" method="post">
+            <form id="delete-article-form" th:action="@{|/articles/*{id}/delete|}" method="post"
+                  th:if="${#authorization.expression('isAuthenticated()')} and *{userId} == ${#authentication.name}">
                 <div class="pb-5 d-grid gap-2 d-md-block">
                     <a class="btn btn-success me-md-2" role="button" th:href="@{|/articles/*{id}/form|}">수정</a>
                     <button class="btn btn-danger me-md-2" type="submit">삭제</button>
@@ -61,7 +62,7 @@
                                 <strong th:text="${comment.nickname}"></strong>
                                 <p th:text="${comment.content}"></p>
                             </div>
-                            <div class="col-2 mb-3">
+                            <div class="col-2 mb-3 align-self-center">
                                 <button type="submit" class="btn btn-outline-danger">삭제</button>
                             </div>
                         </form>

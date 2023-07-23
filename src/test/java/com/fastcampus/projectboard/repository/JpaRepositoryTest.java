@@ -7,17 +7,22 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 // 통합 테스트가 아니기 때문에 JpaConfig를 읽지 못함.
 // Jpa Auditing 기능 작동 X
 @ActiveProfiles("test")
-@Import(JpaConfig.class)
+@Import(JpaRepositoryTest.TestJpaConfig.class)
 @DisplayName("JPA 연결 테스트")
 @DataJpaTest
 class JpaRepositoryTest {
@@ -92,6 +97,15 @@ class JpaRepositoryTest {
         // Then
         assertThat(articleRepository.count()).isEqualTo(previousArticleCount - 1);
         assertThat(articleCommentRepository.count()).isEqualTo(previousArticleCommentCount - deleteCommentsSize);
+    }
 
+    @EnableJpaAuditing
+    @TestConfiguration
+    public static class TestJpaConfig {
+
+        @Bean
+        public AuditorAware<String> auditorAware() {
+            return () -> Optional.of("Dongmin Kim");
+        }
     }
 }
