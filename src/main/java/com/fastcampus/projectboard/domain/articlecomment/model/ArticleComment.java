@@ -1,5 +1,6 @@
 package com.fastcampus.projectboard.domain.articlecomment.model;
 
+import com.fastcampus.projectboard.common.entity.BaseEntity;
 import com.fastcampus.projectboard.domain.article.model.Article;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,8 +22,7 @@ import java.util.Objects;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
-public class ArticleComment {
+public class ArticleComment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,22 +33,6 @@ public class ArticleComment {
 
     @Column(nullable = false, length = 500)
     private String content;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @CreatedBy
-    @Column(nullable = false, updatable = false, length = 100)
-    private String createdBy;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime modifiedAt;
-
-    @LastModifiedBy
-    @Column(nullable = false, length = 100)
-    private String modifiedBy;
 
     @Builder
     private ArticleComment(Article article, String content) {

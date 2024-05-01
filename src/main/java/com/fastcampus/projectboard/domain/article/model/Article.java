@@ -1,5 +1,6 @@
 package com.fastcampus.projectboard.domain.article.model;
 
+import com.fastcampus.projectboard.common.entity.BaseEntity;
 import com.fastcampus.projectboard.domain.articlecomment.model.ArticleComment;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,8 +25,7 @@ import java.util.Set;
 @Getter
 @ToString(exclude = "articleComments")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
-public class Article {
+public class Article extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,22 +43,6 @@ public class Article {
     @OrderBy("id")
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL) // article 테이블에서 온 데이터임을 명시
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @CreatedBy
-    @Column(nullable = false, updatable = false, length = 100)
-    private String createdBy;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime modifiedAt;
-
-    @LastModifiedBy
-    @Column(nullable = false, length = 100)
-    private String modifiedBy;
 
     @Builder
     private Article(String title, String content, String hashtag) {
