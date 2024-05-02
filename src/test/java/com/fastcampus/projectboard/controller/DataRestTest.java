@@ -1,5 +1,6 @@
 package com.fastcampus.projectboard.controller;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("spring data rest api 테스트")
+@Disabled("Spring Data Rest 통합 테스트는 불필요하므로 제외")
+@DisplayName("Spring Data Rest - API 테스트")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK) // default: MOCK
 @Transactional
 @AutoConfigureMockMvc
