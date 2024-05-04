@@ -3,6 +3,8 @@ package com.fastcampus.projectboard.domain.article.repository;
 import com.fastcampus.projectboard.common.config.JpaConfig;
 import com.fastcampus.projectboard.domain.article.model.Article;
 import com.fastcampus.projectboard.domain.articlecomment.repository.ArticleCommentRepository;
+import com.fastcampus.projectboard.domain.user.model.UserAccount;
+import com.fastcampus.projectboard.domain.user.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +23,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 class JpaRepositoryTest {
 
-    @Autowired
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
+    private final ArticleCommentRepository articleCommentRepository;
+    private final UserAccountRepository userAccountRepository;
 
-    @Autowired
-    private ArticleCommentRepository articleCommentRepository;
-
+    public JpaRepositoryTest(
+            @Autowired ArticleRepository articleRepository,
+            @Autowired ArticleCommentRepository articleCommentRepository,
+            @Autowired UserAccountRepository userAccountRepository) {
+        this.articleRepository = articleRepository;
+        this.articleCommentRepository = articleCommentRepository;
+        this.userAccountRepository = userAccountRepository;
+    }
 
     @DisplayName("select 테스트")
     @Test
@@ -45,9 +53,11 @@ class JpaRepositoryTest {
     void givenTestData_whenInserting_thenWorksFine() {
         // Given
         long previousCount = articleRepository.count();
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of("uno", "pw", null, null, null));
+        Article article = Article.of(userAccount, "new article", "new content", "#spring");
 
         // When
-        Article savedArticle = articleRepository.save(Article.of("new Title", "new Content", "#test"));
+        articleRepository.save(article);
 
         // Then
         assertThat(articleRepository.count()).isEqualTo(previousCount + 1);

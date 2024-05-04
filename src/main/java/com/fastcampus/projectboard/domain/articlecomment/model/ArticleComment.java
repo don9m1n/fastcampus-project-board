@@ -2,6 +2,7 @@ package com.fastcampus.projectboard.domain.articlecomment.model;
 
 import com.fastcampus.projectboard.common.entity.BaseEntity;
 import com.fastcampus.projectboard.domain.article.model.Article;
+import com.fastcampus.projectboard.domain.user.model.UserAccount;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -29,20 +30,25 @@ public class ArticleComment extends BaseEntity {
     private Long id;
 
     @ManyToOne(optional = false)
+    private UserAccount userAccount;
+
+    @ManyToOne(optional = false)
     private Article article;
 
     @Column(nullable = false, length = 500)
     private String content;
 
     @Builder
-    private ArticleComment(Article article, String content) {
+    private ArticleComment(Article article, UserAccount userAccount, String content) {
         this.article = article;
+        this.userAccount = userAccount;
         this.content = content;
     }
 
-    public ArticleComment of(Article article, String content) {
+    public static ArticleComment of(Article article, UserAccount userAccount, String content) {
         return ArticleComment.builder()
                 .article(article)
+                .userAccount(userAccount)
                 .content(content)
                 .build();
     }

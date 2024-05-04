@@ -2,6 +2,7 @@ package com.fastcampus.projectboard.domain.article.model;
 
 import com.fastcampus.projectboard.common.entity.BaseEntity;
 import com.fastcampus.projectboard.domain.articlecomment.model.ArticleComment;
+import com.fastcampus.projectboard.domain.user.model.UserAccount;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -31,6 +32,9 @@ public class Article extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(optional = false)
+    private UserAccount userAccount;
+
     @Column(nullable = false)
     private String title;
 
@@ -40,20 +44,22 @@ public class Article extends BaseEntity {
     @Setter
     private String hashtag;
 
-    @OrderBy("id")
+    @OrderBy("createdAt desc")
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL) // article 테이블에서 온 데이터임을 명시
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
 
     @Builder
-    private Article(String title, String content, String hashtag) {
+    private Article(UserAccount userAccount, String title, String content, String hashtag) {
+        this.userAccount = userAccount;
         this.title = title;
         this.content = content;
         this.hashtag = hashtag;
     }
 
     // Factory Method
-    public static Article of(String title, String content, String hashtag) {
+    public static Article of(UserAccount userAccount, String title, String content, String hashtag) {
         return Article.builder()
+                .userAccount(userAccount)
                 .title(title)
                 .content(content)
                 .hashtag(hashtag)
