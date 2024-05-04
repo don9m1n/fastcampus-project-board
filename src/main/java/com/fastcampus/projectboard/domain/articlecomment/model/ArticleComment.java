@@ -45,7 +45,7 @@ public class ArticleComment extends BaseEntity {
         this.content = content;
     }
 
-    public ArticleComment of(Article article, UserAccount userAccount, String content) {
+    public static ArticleComment of(Article article, UserAccount userAccount, String content) {
         return ArticleComment.builder()
                 .article(article)
                 .userAccount(userAccount)

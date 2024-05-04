@@ -1,5 +1,6 @@
 package com.fastcampus.projectboard.domain.articlecomment.service;
 
+import com.fastcampus.projectboard.domain.article.repository.ArticleRepository;
 import com.fastcampus.projectboard.domain.articlecomment.dto.ArticleCommentDto;
 import com.fastcampus.projectboard.domain.articlecomment.repository.ArticleCommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleCommentService {
 
+    private final ArticleRepository articleRepository;
     private final ArticleCommentRepository articleCommentRepository;
 
 
@@ -24,4 +26,13 @@ public class ArticleCommentService {
     public void saveArticleComment(ArticleCommentDto dto) {
 
     }
+
+    public void updateArticleComment(ArticleCommentDto dto) {
+
+    }
+
+    public void deleteArticleComment(Long articleCommentId) {
+
+    }
+
 }

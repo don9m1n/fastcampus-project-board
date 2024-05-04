@@ -1,19 +1,24 @@
 package com.fastcampus.projectboard.domain.article.dto;
 
 import com.fastcampus.projectboard.domain.article.model.Article;
+import com.fastcampus.projectboard.domain.articlecomment.dto.ArticleCommentDto;
 import com.fastcampus.projectboard.domain.user.dto.UserAccountDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ArticleDto {
+public class ArticleWithCommentsDto {
 
     private Long id;
     private UserAccountDto userAccountDto;
+    private Set<ArticleCommentDto> articleCommentDtos;
     private String title;
     private String content;
     private String hashtag;
@@ -22,15 +27,18 @@ public class ArticleDto {
     private LocalDateTime modifiedAt;
     private String modifiedBy;
 
-    public static ArticleDto of(Long id, UserAccountDto userAccountDto, String title, String content,
-                                String hashtag, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
-        return new ArticleDto(id, userAccountDto, title, content, hashtag, createdAt, createdBy, modifiedAt, modifiedBy);
+    public static ArticleWithCommentsDto of(Long id, UserAccountDto userAccountDto, Set<ArticleCommentDto> articleCommentDtos,
+                                            String title, String content, String hashtag, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
+        return new ArticleWithCommentsDto(id, userAccountDto, articleCommentDtos, title, content, hashtag, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
-    public static ArticleDto from(Article entity) {
-        return new ArticleDto(
+    public static ArticleWithCommentsDto from(Article entity) {
+        return new ArticleWithCommentsDto(
                 entity.getId(),
                 UserAccountDto.from(entity.getUserAccount()),
+                entity.getArticleComments().stream()
+                        .map(ArticleCommentDto::from)
+                        .collect(Collectors.toCollection(LinkedHashSet::new)),
                 entity.getTitle(),
                 entity.getContent(),
                 entity.getHashtag(),
@@ -41,12 +49,5 @@ public class ArticleDto {
         );
     }
 
-    public Article toEntity() {
-        return Article.of(
-                userAccountDto.toEntity(),
-                title,
-                content,
-                hashtag
-        );
-    }
+
 }
