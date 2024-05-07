@@ -75,13 +75,25 @@
             </tbody>
         </table>
 
-        <nav aria-label="Page navigation example">
+        <nav id="pagination">
             <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                <li class="page-item">
+                    <a th:text="previous"
+                       th:href="@{/articles(page=${articles.number - 1}, searchType=${param.searchType}, searchValue=${param.searchValue})}"
+                       th:class="'page-link ' + (${articles.number <= 0} ? 'disabled' : '')"></a>
+                </li>
+
+                <li class="page-item" th:each="pageNumber :${paginationBarNumbers}">
+                    <a th:text="${pageNumber + 1}"
+                       th:href="@{/articles(page=${pageNumber}, searchType=${param.searchType}, searchValue=${param.searchValue})}"
+                       th:class="'page-link ' + (${pageNumber} == ${articles.number} ? 'active' : '')"></a>
+                </li>
+
+                <li class="page-item">
+                    <a th:text="next"
+                       th:href="@{/articles(page=${articles.number + 1}, searchType=${param.searchType}, searchValue=${param.searchValue})}"
+                       th:class="'page-link ' + (${articles.number} >= ${articles.totalPages - 1} ? 'disabled' : '')"></a>
+                </li>
             </ul>
         </nav>
     </main>
