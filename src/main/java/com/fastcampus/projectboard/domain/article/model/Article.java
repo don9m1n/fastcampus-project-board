@@ -1,6 +1,7 @@
 package com.fastcampus.projectboard.domain.article.model;
 
 import com.fastcampus.projectboard.common.entity.BaseEntity;
+import com.fastcampus.projectboard.domain.article.dto.ArticleDto;
 import com.fastcampus.projectboard.domain.articlecomment.model.ArticleComment;
 import com.fastcampus.projectboard.domain.user.model.UserAccount;
 import jakarta.persistence.*;
@@ -35,9 +36,11 @@ public class Article extends BaseEntity {
     @ManyToOne(optional = false)
     private UserAccount userAccount;
 
+    @Setter
     @Column(nullable = false)
     private String title;
 
+    @Setter
     @Column(nullable = false, length = 1000)
     private String content;
 
