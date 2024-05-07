@@ -55,24 +55,22 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>제목</th>
-                    <th>해시태그</th>
-                    <th>작성자</th>
-                    <th>작성일</th>
+                    <th class="col-6">제목</th>
+                    <th class="col-2">해시태그</th>
+                    <th class="col">작성자</th>
+                    <th class="col">작성일</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>첫글</td>
-                    <td>#java</td>
-                    <td>Dongmin</td>
-                    <td>2024-05-02</td>
-                </tr>
-                <tr>
-                    <td>두번째글</td>
-                    <td>#jpa</td>
-                    <td>Dongmin</td>
-                    <td>2024-05-01</td>
+                <tr th:each="article : ${articles}">
+                    <td>
+                        <a th:href="@{/articles/{articleId}(articleId=${article.id})}" th:text="${article.title}"></a>
+                    </td>
+                    <td th:text="${article.hashtag}"></td>
+                    <td th:text="${article.nickname}"></td>
+                    <td>
+                        <time th:datetime="${article.createdAt}" th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}"></time>
+                    </td>
                 </tr>
             </tbody>
         </table>

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ArticleWithCommentResponse {
+public class ArticleWithCommentsResponse {
 
     private Long id;
     private String title;
@@ -24,17 +24,17 @@ public class ArticleWithCommentResponse {
     private String nickname;
     private Set<ArticleCommentResponse> articleCommentsResponse;
 
-    public static ArticleWithCommentResponse of(Long id, String title, String content, String hashtag, LocalDateTime createdAt, String email, String nickname, Set<ArticleCommentResponse> articleCommentResponses) {
-        return new ArticleWithCommentResponse(id, title, content, hashtag, createdAt, email, nickname, articleCommentResponses);
+    public static ArticleWithCommentsResponse of(Long id, String title, String content, String hashtag, LocalDateTime createdAt, String email, String nickname, Set<ArticleCommentResponse> articleCommentResponses) {
+        return new ArticleWithCommentsResponse(id, title, content, hashtag, createdAt, email, nickname, articleCommentResponses);
     }
 
-    public static ArticleWithCommentResponse from(ArticleWithCommentsDto dto) {
+    public static ArticleWithCommentsResponse from(ArticleWithCommentsDto dto) {
         String nickname = dto.getUserAccountDto().getNickname();
         if (nickname == null || nickname.isBlank()) {
             nickname = dto.getUserAccountDto().getUserId();
         }
 
-        return new ArticleWithCommentResponse(
+        return new ArticleWithCommentsResponse(
                 dto.getId(),
                 dto.getTitle(),
                 dto.getContent(),
