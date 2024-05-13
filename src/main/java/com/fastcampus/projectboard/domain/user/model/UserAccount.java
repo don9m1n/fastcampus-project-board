@@ -7,7 +7,6 @@ import lombok.*;
 import java.util.Objects;
 
 @Table(indexes = {
-        @Index(columnList = "userId"),
         @Index(columnList = "email", unique = true),
         @Index(columnList = "createdAt"),
         @Index(columnList = "createdBy")
@@ -19,10 +18,6 @@ import java.util.Objects;
 public class UserAccount extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Setter
     @Column(nullable = false, length = 50)
     private String userId;
 
@@ -64,12 +59,12 @@ public class UserAccount extends BaseEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserAccount userAccount)) return false;
-        return id != null && id.equals(userAccount.id);
+        return getUserId() != null && getUserId().equals(userAccount.getUserId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(getUserId());
     }
 
 }
