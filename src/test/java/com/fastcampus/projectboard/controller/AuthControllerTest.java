@@ -1,6 +1,7 @@
 package com.fastcampus.projectboard.controller;
 
 import com.fastcampus.projectboard.common.config.SecurityConfig;
+import com.fastcampus.projectboard.domain.home.HomeController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("인증 컨트롤러 테스트")
 @Import(SecurityConfig.class)
-@WebMvcTest
+@WebMvcTest(HomeController.class)
 public class AuthControllerTest {
 
     private final MockMvc mvc;
