@@ -34,6 +34,7 @@ public class Article extends BaseEntity {
     private Long id;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id")
     private UserAccount userAccount;
 
     @Setter
