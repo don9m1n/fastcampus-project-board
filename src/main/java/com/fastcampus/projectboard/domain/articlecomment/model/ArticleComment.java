@@ -36,6 +36,7 @@ public class ArticleComment extends BaseEntity {
     @ManyToOne(optional = false)
     private Article article;
 
+    @Setter
     @Column(nullable = false, length = 500)
     private String content;
 

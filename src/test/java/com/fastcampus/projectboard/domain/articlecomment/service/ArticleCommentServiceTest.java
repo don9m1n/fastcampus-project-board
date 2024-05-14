@@ -7,6 +7,7 @@ import com.fastcampus.projectboard.domain.articlecomment.model.ArticleComment;
 import com.fastcampus.projectboard.domain.articlecomment.repository.ArticleCommentRepository;
 import com.fastcampus.projectboard.domain.user.dto.UserAccountDto;
 import com.fastcampus.projectboard.domain.user.model.UserAccount;
+import com.fastcampus.projectboard.domain.user.repository.UserAccountRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -25,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
-@Disabled("테스트 미구현..")
 @DisplayName("비즈니스 로직 테스트 - 댓글")
 @ExtendWith(MockitoExtension.class)
 class ArticleCommentServiceTest {
@@ -38,6 +38,9 @@ class ArticleCommentServiceTest {
 
     @Mock
     private ArticleCommentRepository articleCommentRepository;
+
+    @Mock
+    private UserAccountRepository userAccountRepository;
 
     @DisplayName("게시글 ID로 조회하면, 해당 게시글의 댓글 목록을 조회한다.")
     @Test
@@ -64,6 +67,7 @@ class ArticleCommentServiceTest {
         // given
         ArticleCommentDto dto = createArticleCommentDto("댓글");
         given(articleRepository.getReferenceById(dto.getArticleId())).willReturn(createArticle());
+        given(userAccountRepository.getReferenceById(dto.getUserAccountDto().getUserId())).willReturn(createUserAccount());
         given(articleCommentRepository.save(any(ArticleComment.class))).willReturn(null);
 
         // when
@@ -71,6 +75,7 @@ class ArticleCommentServiceTest {
 
         // then
         then(articleRepository).should().getReferenceById(dto.getArticleId());
+        then(userAccountRepository).should().getReferenceById(dto.getUserAccountDto().getUserId());
         then(articleCommentRepository).should().save(any(ArticleComment.class));
     }
 
@@ -86,6 +91,7 @@ class ArticleCommentServiceTest {
 
         // Then
         then(articleRepository).should().getReferenceById(dto.getArticleId());
+        then(userAccountRepository).shouldHaveNoInteractions();
         then(articleCommentRepository).shouldHaveNoInteractions();
     }
 
