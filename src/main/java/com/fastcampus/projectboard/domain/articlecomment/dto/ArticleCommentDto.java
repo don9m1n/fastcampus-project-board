@@ -3,6 +3,7 @@ package com.fastcampus.projectboard.domain.articlecomment.dto;
 import com.fastcampus.projectboard.domain.article.model.Article;
 import com.fastcampus.projectboard.domain.articlecomment.model.ArticleComment;
 import com.fastcampus.projectboard.domain.user.dto.UserAccountDto;
+import com.fastcampus.projectboard.domain.user.model.UserAccount;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,10 @@ public class ArticleCommentDto {
     private LocalDateTime modifiedAt;
     private String modifiedBy;
 
+    public static ArticleCommentDto of(Long articleId, UserAccountDto userAccountDto, String content) {
+        return new ArticleCommentDto(null, articleId, userAccountDto, content, null, null, null, null);
+    }
+
     public static ArticleCommentDto of(Long id, Long articleId, UserAccountDto userAccountDto, String content,
                                        LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
         return new ArticleCommentDto(id, articleId, userAccountDto, content, createdAt, createdBy, modifiedAt, modifiedBy);
@@ -40,10 +45,10 @@ public class ArticleCommentDto {
         );
     }
 
-    public ArticleComment toEntity(Article entity) {
+    public ArticleComment toEntity(Article article, UserAccount userAccount) {
         return ArticleComment.of(
-                entity,
-                userAccountDto.toEntity(),
+                article,
+                userAccount,
                 content
         );
     }
