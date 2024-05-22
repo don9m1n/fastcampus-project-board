@@ -5,12 +5,11 @@ import com.fastcampus.projectboard.domain.article.repository.ArticleRepository;
 import com.fastcampus.projectboard.domain.articlecomment.dto.ArticleCommentDto;
 import com.fastcampus.projectboard.domain.articlecomment.model.ArticleComment;
 import com.fastcampus.projectboard.domain.articlecomment.repository.ArticleCommentRepository;
+import com.fastcampus.projectboard.domain.hashtag.model.Hashtag;
 import com.fastcampus.projectboard.domain.user.dto.UserAccountDto;
 import com.fastcampus.projectboard.domain.user.model.UserAccount;
 import com.fastcampus.projectboard.domain.user.repository.UserAccountRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -174,7 +173,7 @@ class ArticleCommentServiceTest {
 
     private ArticleComment createArticleComment(String content) {
         return ArticleComment.of(
-                Article.of(createUserAccount(), "title", "content", "hashtag"),
+                createArticle(),
                 createUserAccount(),
                 content
         );
@@ -191,14 +190,19 @@ class ArticleCommentServiceTest {
     }
 
     private Article createArticle() {
-        return Article.of(
+        Article article = Article.of(
                 createUserAccount(),
                 "title",
-                "content",
-                "#java"
+                "content"
         );
+        article.addHashtags(Set.of(createHashtag(article)));
+
+        return article;
     }
 
+    private Hashtag createHashtag(Article article) {
+        return Hashtag.of("java");
+    }
 
 
 }
