@@ -68,7 +68,7 @@
                     <th class="col-2">
                         <a th:text="해시태그" th:href="@{/articles(
                             page=*{number},
-                            sort='hashtag' + (*{sort.getOrderFor('hashtag')} != null ? (*{sort.getOrderFor('hashtag').direction.name} != 'DESC' ? ',desc' : '') : ''),
+                            sort='hashtags' + (*{sort.getOrderFor('hashtags')} != null ? (*{sort.getOrderFor('hashtags').direction.name} != 'DESC' ? ',desc' : '') : ''),
                             searchType=${param.searchType},
                             searchValue=${param.searchValue})}">
 
@@ -99,7 +99,14 @@
                     <td>
                         <a th:href="@{/articles/{articleId}(articleId=${article.id})}" th:text="${article.title}"></a>
                     </td>
-                    <td th:text="${article.hashtag}"></td>
+                    <td>
+                        <span class="badge text-bg-secondary mx-1" th:each="hashtag : ${article.hashtags}">
+                            <a class="text-reset"
+                               th:text="'#' + ${hashtag}"
+                               th:href="@{/articles(searchType=${searchTypeHashtag},searchValue=${hashtag})}">
+                            </a>
+                        </span>
+                    </td>
                     <td th:text="${article.nickname}"></td>
                     <td>
                         <time th:datetime="${article.createdAt}" th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}"></time>

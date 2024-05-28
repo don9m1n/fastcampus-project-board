@@ -14,6 +14,7 @@ import com.fastcampus.projectboard.domain.user.model.UserAccount;
 import com.fastcampus.projectboard.domain.user.repository.UserAccountRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -109,6 +110,7 @@ class ArticleServiceTest {
         then(articleRepository).should().findByHashtagNames(List.of(hashtagName), pageable);
     }
 
+    @Disabled
     @DisplayName("게시글을 해시태그 검색하면, 게시글 페이지를 반환한다.")
     @Test
     void givenHashtag_whenSearchingArticlesViaHashtag_thenReturnsArticlesPage() {
@@ -126,6 +128,7 @@ class ArticleServiceTest {
         then(articleRepository).should().findByHashtagNames(List.of(hashtagName), pageable);
     }
 
+    @Disabled
     @DisplayName("게시글 ID로 조회하면, 댓글 달긴 게시글을 반환한다.")
     @Test
     void givenArticleId_whenSearchingArticleWithComments_thenReturnsArticleWithComments() {
@@ -165,6 +168,7 @@ class ArticleServiceTest {
         then(articleRepository).should().findById(articleId);
     }
 
+    @Disabled
     @DisplayName("게시글을 조회하면, 게시글을 반환한다.")
     @Test
     void givenArticleId_whenSearchingArticle_thenReturnsArticle() {

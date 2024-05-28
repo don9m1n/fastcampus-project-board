@@ -5,6 +5,9 @@ import com.fastcampus.projectboard.domain.article.dto.ArticleWithCommentsDto;
 import com.fastcampus.projectboard.domain.article.model.Article;
 import com.fastcampus.projectboard.domain.article.model.SearchType;
 import com.fastcampus.projectboard.domain.article.repository.ArticleRepository;
+import com.fastcampus.projectboard.domain.hashtag.model.Hashtag;
+import com.fastcampus.projectboard.domain.hashtag.repository.HashtagRepository;
+import com.fastcampus.projectboard.domain.hashtag.service.HashtagService;
 import com.fastcampus.projectboard.domain.user.model.UserAccount;
 import com.fastcampus.projectboard.domain.user.repository.UserAccountRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,21 +29,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleService {
 
+    private final HashtagService hashtagService;
     private final ArticleRepository articleRepository;
     private final UserAccountRepository userAccountRepository;
+    private final HashtagRepository hashtagRepository;
 
     @Transactional(readOnly = true)
-    public Page<ArticleDto> searchArticlesViaHashtag(String hashtag, Pageable pageable) {
-        if (hashtag == null || hashtag.isBlank()) {
+    public Page<ArticleDto> searchArticlesViaHashtag(String hashtagName, Pageable pageable) {
+        if (hashtagName == null || hashtagName.isBlank()) {
             return Page.empty(pageable);
         }
 
-        return articleRepository.findByHashtagNames(null, pageable).map(ArticleDto::from);
+        return articleRepository.findByHashtagNames(List.of(hashtagName), pageable)
+                .map(ArticleDto::from);
     }
 
     @Transactional(readOnly = true)
     public List<String> getHashtags() {
-        return articleRepository.findAllDistinctHashtags();
+        return hashtagRepository.findAllHashtagNames();
     }
 
     @Transactional(readOnly = true)
@@ -75,7 +83,27 @@ public class ArticleService {
 
     public void saveArticle(ArticleDto dto) {
         UserAccount userAccount = userAccountRepository.getReferenceById(dto.getUserAccountDto().getUserId());
-        articleRepository.save(dto.toEntity(userAccount));
+        Set<Hashtag> hashtags = renewHashtagsFromContent(dto.getContent());
+        Article article = dto.toEntity(userAccount);
+        article.addHashtags(hashtags);
+
+        articleRepository.save(article);
+    }
+
+    private Set<Hashtag> renewHashtagsFromContent(String content) {
+        Set<String> hashtagNamesInContent = hashtagService.parseHashtagNames(content);
+        Set<Hashtag> hashtags = hashtagService.findHashtagsByNames(hashtagNamesInContent);
+        Set<String> existingHashtagNames = hashtags.stream()
+                .map(Hashtag::getHashtagName)
+                .collect(Collectors.toUnmodifiableSet());
+
+        hashtagNamesInContent.forEach(newHashtagName -> {
+            if (!existingHashtagNames.contains(newHashtagName)) {
+                hashtags.add(Hashtag.of(newHashtagName));
+            }
+        });
+
+        return hashtags;
     }
 
     public void updateArticle(Long articleId, ArticleDto dto) {
@@ -86,6 +114,18 @@ public class ArticleService {
             if(article.getUserAccount().equals(userAccount)) {
                 if (dto.getTitle() != null) { article.setTitle(dto.getTitle()); }
                 if (dto.getContent() != null) { article.setContent(dto.getContent()); }
+
+                Set<Long> hashtagIds = article.getHashtags().stream()
+                        .map(Hashtag::getId)
+                        .collect(Collectors.toUnmodifiableSet());
+
+                article.clearHashtags();
+                articleRepository.flush();
+
+                hashtagIds.forEach(hashtagService::deleteHashtagWithoutArticles);
+
+                Set<Hashtag> hashtags = renewHashtagsFromContent(dto.getContent());
+                article.addHashtags(hashtags);
             }
 
         } catch (EntityNotFoundException e) {
@@ -94,7 +134,15 @@ public class ArticleService {
     }
 
     public void deleteArticle(long articleId, String userId) {
+        Article article = articleRepository.getReferenceById(articleId);
+        Set<Long> hashtagIds = article.getHashtags().stream()
+                .map(Hashtag::getId)
+                .collect(Collectors.toUnmodifiableSet());
+
         articleRepository.deleteByIdAndUserAccount_UserId(articleId, userId);
+        articleRepository.flush();
+
+        hashtagIds.forEach(hashtagService::deleteHashtagWithoutArticles);
     }
 
     public long getArticleCount() {

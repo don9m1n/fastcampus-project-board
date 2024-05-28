@@ -24,7 +24,14 @@
                     <p><span id="nickname" th:text="*{nickname}"></span></p>
                     <p><a id="email" th:href="@{mailto:*{email}}" th:text="*{email}"></a></p>
                     <p><time id="created-at" th:datetime="*{createdAt}" th:text="*{#temporals.format(createdAt, 'yyyy-MM-dd')}"></time></p>
-                    <p><span id="hashtag" class="badge text-bg-secondary mx-1"><a class="text-reset" th:text="*{hashtag}">#java</a></span></p>
+                    <p>
+                        <span id="hashtag" class="badge text-bg-secondary mx-1" th:each="hashtag : ${article.hashtags}">
+                            <a class="text-reset"
+                               th:text="'#' + ${hashtag}"
+                               th:href="@{/articles(searchType=${searchTypeHashtag},searchValue=${hashtag})}">
+                            </a>
+                        </span>
+                    </p>
                 </aside>
             </section>
 
