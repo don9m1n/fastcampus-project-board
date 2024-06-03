@@ -1,6 +1,7 @@
 package com.fastcampus.projectboard.domain.article.dto.response;
 
 import com.fastcampus.projectboard.domain.article.dto.ArticleWithCommentsDto;
+import com.fastcampus.projectboard.domain.articlecomment.dto.ArticleCommentDto;
 import com.fastcampus.projectboard.domain.articlecomment.dto.response.ArticleCommentResponse;
 import com.fastcampus.projectboard.domain.hashtag.dto.HashtagDto;
 import lombok.AccessLevel;
@@ -8,8 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Getter
@@ -47,9 +48,32 @@ public class ArticleWithCommentsResponse {
                 dto.getUserAccountDto().getEmail(),
                 nickname,
                 dto.getUserAccountDto().getUserId(),
-                dto.getArticleCommentDtos().stream()
-                        .map(ArticleCommentResponse::from)
-                        .collect(Collectors.toCollection(LinkedHashSet::new))
+                organizeChildComments(dto.getArticleCommentDtos())
         );
     }
+
+    private static Set<ArticleCommentResponse> organizeChildComments(Set<ArticleCommentDto> dtos) {
+
+        Map<Long, ArticleCommentResponse> map = dtos.stream()
+                .map(ArticleCommentResponse::from)
+                .collect(Collectors.toMap(ArticleCommentResponse::getId, Function.identity()));
+
+        map.values().stream()
+                .filter(ArticleCommentResponse::hasParentComment)
+                .forEach(comment -> {
+                    ArticleCommentResponse parentComment = map.get(comment.getParentCommentId());
+                    parentComment.getChildComments().add(comment);
+                });
+
+        return map.values().stream()
+                .filter(comment -> !comment.hasParentComment())
+                .collect(Collectors.toCollection(() ->
+                        new TreeSet<>(Comparator
+                                .comparing(ArticleCommentResponse::getCreatedAt)
+                                .reversed()
+                                .thenComparingLong(ArticleCommentResponse::getId)
+                        )
+                ));
+    }
+
 }
