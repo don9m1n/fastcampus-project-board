@@ -2,6 +2,7 @@ package com.fastcampus.projectboard.domain.article.dto;
 
 import com.fastcampus.projectboard.domain.article.model.Article;
 import com.fastcampus.projectboard.domain.articlecomment.dto.ArticleCommentDto;
+import com.fastcampus.projectboard.domain.hashtag.dto.HashtagDto;
 import com.fastcampus.projectboard.domain.user.dto.UserAccountDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,15 +22,15 @@ public class ArticleWithCommentsDto {
     private Set<ArticleCommentDto> articleCommentDtos;
     private String title;
     private String content;
-    private String hashtag;
+    private Set<HashtagDto> HashtagDtos;
     private LocalDateTime createdAt;
     private String createdBy;
     private LocalDateTime modifiedAt;
     private String modifiedBy;
 
     public static ArticleWithCommentsDto of(Long id, UserAccountDto userAccountDto, Set<ArticleCommentDto> articleCommentDtos,
-                                            String title, String content, String hashtag, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
-        return new ArticleWithCommentsDto(id, userAccountDto, articleCommentDtos, title, content, hashtag, createdAt, createdBy, modifiedAt, modifiedBy);
+                                            String title, String content, Set<HashtagDto> hashtagDtos, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
+        return new ArticleWithCommentsDto(id, userAccountDto, articleCommentDtos, title, content, hashtagDtos , createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
     public static ArticleWithCommentsDto from(Article entity) {
@@ -41,7 +42,9 @@ public class ArticleWithCommentsDto {
                         .collect(Collectors.toCollection(LinkedHashSet::new)),
                 entity.getTitle(),
                 entity.getContent(),
-                entity.getHashtag(),
+                entity.getHashtags().stream()
+                                .map(HashtagDto::from)
+                                        .collect(Collectors.toUnmodifiableSet()),
                 entity.getCreatedAt(),
                 entity.getCreatedBy(),
                 entity.getModifiedAt(),

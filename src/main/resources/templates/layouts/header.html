@@ -16,6 +16,9 @@
                 <div class="text-end">
                     <span class="text-white me-2" sec:authorize="isAuthenticated()" sec:authentication="name"></span>
                     <a role="button" th:href="@{/login}" sec:authorize="isAnonymous()" class="btn btn-outline-light me-2">Login</a>
+                    <a role="button" th:href="@{/oauth2/authorization/kakao}" sec:authorize="isAnonymous()">
+                        <img th:src="@{/images/kakao_login_medium.png}" alt="카카오 로그인 버튼">
+                    </a>
                     <a role="button" th:href="@{/logout}" sec:authorize="isAuthenticated()" class="btn btn-outline-light me-2">logout</a>
                 </div>
             </div>
