@@ -36,8 +36,9 @@ public class SecurityConfig {
             HttpSecurity http,
             OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/", "/articles", "/articles/search-hashtag").permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/", "/articles", "/articles/search-hashtag").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(withDefaults())
@@ -47,6 +48,7 @@ public class SecurityConfig {
                         )
                 )
                 .logout(logout -> logout.logoutSuccessUrl("/"))
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .build();
     }
 
